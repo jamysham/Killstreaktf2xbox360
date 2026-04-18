@@ -6,28 +6,22 @@
 #define MAX_PLAYERS 24
 
 int g_Killstreak[MAX_PLAYERS];
-int g_LastVictimStreak[MAX_PLAYERS];
 
 const char* GetPlayerName(int index); 
 void ShowGameText(int player, const char* text); 
 void ShowKillFeed(const char* text); 
 
-static char buffer[256];
-
-static const char* Format(const char* fmt, const char* a, const char* b = nullptr)
-{
-    sprintf(buffer, fmt, a, b ? b : "");
-    return buffer;
-}
-
 void ResetPlayer(int player)
 {
+    if (player < 0 || player >= MAX_PLAYERS)
+        return;
+
     g_Killstreak[player] = 0;
 }
 
 void OnPlayerKilled(int attacker, int victim)
 {
-    if (attacker < 0 || victim < 0)
+    if (attacker < 0 || attacker >= MAX_PLAYERS || victim < 0 || victim >= MAX_PLAYERS)
         return;
 
     if (attacker == victim)
@@ -49,11 +43,16 @@ void OnPlayerKilled(int attacker, int victim)
     const char* victimName = GetPlayerName(victim);
 
     
-    if (g_Killstreak[attacker] == 5)
+    int streak = g_Killstreak[attacker];
+    if (streak % 5 == 0 && streak > 0)
     {
         char msg[256];
-        sprintf(msg, "%s is on a KILLING SPREE! (5)", attackerName);
+        const char* streakName = "KILLING SPREE";
+        if (streak == 10) streakName = "RAMPAGE";
+        else if (streak == 15) streakName = "UNSTOPPABLE";
+        else if (streak >= 20) streakName = "GOD-LIKE";
 
+        snprintf(msg, sizeof(msg), "%s is on a %s! (%d)", attackerName, streakName, streak);
         ShowGameText(-1, msg);
     }
 
@@ -63,8 +62,8 @@ void OnPlayerKilled(int attacker, int victim)
         char feed[256];
         char text[256];
 
-        sprintf(feed, "%s captured Their rampage is no more!", attackerName);
-        sprintf(text, "%s ended %s's Kill streak!", attackerName, victimName);
+        snprintf(feed, sizeof(feed), "%s ended %s's rampage!", attackerName, victimName);
+        snprintf(text, sizeof(text), "%s ended %s's Kill streak!", attackerName, victimName);
 
         ShowKillFeed(feed);
         ShowGameText(-1, text);
