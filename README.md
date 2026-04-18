@@ -6,4 +6,4 @@ This is in works.
 
 
 
-Info: the code is vibe-coded, the real code will be release some day when i have the motivation.
+Info: the code is vibe-coded, the real code will be released some day when i have the motivation.
