@@ -8,4 +8,4 @@ This is in works.
 
 ## Info: the code is vibe-coded, the real code will be released some day when i have the motivation.
 
-This plugin tries to replicate Cosmo's Killstreak, but without Cosmo X's feature alone.
+This plugin tries to replicate Cosmo's Killstreak, but without the additional features of Cosmo X.
